@@ -54,7 +54,8 @@ public class UserController {
             }
            else
             {
-                return ResponseEntity.status(HttpStatus.LENGTH_REQUIRED).body("username and password length should be more than 4");
+                return new ResponseEntity<>("Username already exists",HttpStatus.CONFLICT);
+                //return ResponseEntity.status(HttpStatus.LENGTH_REQUIRED).body("username and password length should be more than 4");
             }
         }
         else
@@ -81,7 +82,7 @@ public class UserController {
             final UserDetails userDetails = myUserDetailsService.loadUserByUsername(
                     authenticationRequest.getUsername());
             final String jwt=jwtTokenUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new AuthenticationResponse(jwt));
+            return  new ResponseEntity<>(new AuthenticationResponse(jwt),HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -91,16 +92,6 @@ public class UserController {
 
     }
 
-    @PostMapping(value="api/logingdhty")
-    public ResponseEntity<?> login(@RequestBody Userinfo userinfo)
-    {
-        Userinfo newUser=userService.findByUsername(userinfo.username);
-        if(newUser.getPassword().equals(userinfo.getPassword())) {
-            return new ResponseEntity<>( HttpStatus.OK);
-        }
-        else
-        return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
-    }
 
 
 }

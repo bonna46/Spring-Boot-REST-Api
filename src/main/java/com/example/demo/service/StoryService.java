@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 public class StoryService {
 
+
     @Autowired
     private StoryRepository storyRepository;
     List<Story> stories= new ArrayList<>(
@@ -42,24 +43,27 @@ public class StoryService {
 
     public void deleteStory(Integer id) {
         storyRepository.deleteById(id);
-
     }
 
-    public String updateAndSaveStory(Integer id, Story newStory)
+    public void updateAndSaveStory(Integer id, Story newStory)
     {
 
         Optional<Story> storyWithId=storyRepository.findById(id);
-        if(newStory.getAuthor()==null)
-            newStory.setAuthor(storyWithId.get().getAuthor());
-        if(newStory.getTitle()==null)
+        newStory.setAuthor(storyWithId.get().getAuthor());
+        if(newStory.getTitle()==null || newStory.getTitle().trim().length()==0)
             newStory.setTitle(storyWithId.get().getTitle());
-        if(newStory.getStory()==null)
+        if(newStory.getStory()==null || newStory.getStory().trim().length()==0)
             newStory.setStory(storyWithId.get().getStory());
 
         storyRepository.updateStory(id,newStory.getAuthor(), newStory.getTitle(), newStory.getStory());
-        return "ok";
+
     }
 
+    public boolean isExistChar(String newChar){
+        if(newChar.trim().length()==0)
+            return false;
+        return true;
+    }
 
 
 

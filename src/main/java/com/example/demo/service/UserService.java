@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.model.Userinfo;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.List;
 
 @Service
 public class UserService {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -28,7 +31,7 @@ public class UserService {
 
     public boolean isValidUserPassFormat(Userinfo newUser)
     {
-        if(newUser.getUsername().length()>=5 && newUser.getPassword().length()>=5)
+        if(newUser.getUsername().trim().length()>=5 && newUser.getPassword().trim().length()>=5)
             return true;
         else
             return false;
@@ -43,6 +46,7 @@ public class UserService {
 
     public void register(Userinfo newUser)
     {
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
     }
 
